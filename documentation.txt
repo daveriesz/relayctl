@@ -1,0 +1,38 @@
+from "http://denkovi.com/usb-16-channel-relay-module-rs232-controlled-12v-ver.2"
+
+Serial commands
+- Communication parameters - 8 Data, 1 Stop, No Parity, Baud Rate - 9600 bps
+- Command for receiving the relays status:
+  - Send "ask//".
+  - The answer is two bytes - byte 1 and byte 2. Byte 1 represents relays from 1 to 8. MSB of byte 1 is Relay 1 and LSB of byte 1 is Relay 8. Byte 2 represents relays from 9 to 16. MSB of byte 2 is Relay 10 and LSB of byte 2 is Relay 16.
+  - Example:
+    answer 1: 00 -> relays from 1 to 16 are OFF.
+    answer 2: 255(dec) 255(dec) -> relays from 1 to 16 are ON.
+    answer 3: 81(dec) 81(dec) -> Relays 1,8,9,16 - ON, the rest are OFF.
+- Commands for single relay setting:
+  - "01+//" - Relay 1 is switched ON
+  - "01-//" - Relay 1 is switched OFF
+  - "02+//" - Relay 2 is switched ON
+  - "02-//" - Relay 2 is switched OFF
+  - ......
+  - ......
+  - "16+//" - Relay 16 is switched ON
+  - "16-//" - Relay 16 is switched OFF
+- Commands for all relays setting:
+  - "on//" - All relays are switched ON
+  - "off//" - All relays are switched OFF
+- Command for many relays setting
+  - Send sequentially:
+    "x" - as a char
+    a - as HEX number. a[0;FF]. This number correspondends with relays from 1 to 8. The MSB is relay 1.
+    b - as HEX number. b[0;FF]. This number correspondends with relays from 9 to 16. The MSB is relay 9.
+    "/" - as a char. This is the first part of the delimiter
+    "/" - as a char. This is the second part of the delimiter
+    Example (a=1A(hex) and b= 05(hex) )
+    "x" 1A 05 "/" "/"
+    1A(hex)=00011010(bin)
+    05(hex)=00000101(bin)
+    Relays 1,2,3,6,8,9,10,11,12,13,15 - switched OFF
+    Relays 4,5,7,14,16 - switched ON
+
+Note that there must be minimum 5ms interval between each two commands !
