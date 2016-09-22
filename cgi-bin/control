@@ -1,0 +1,10 @@
+#!/bin/sh
+
+rctl=/home/dpr/relayctl/relayctl
+
+args=`echo "${QUERY_STRING}" | sed "s/&/ /g"`
+
+printf "Content-type: text/plain\n\n"
+
+"${rctl}" ${args}
+

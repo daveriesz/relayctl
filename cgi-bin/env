@@ -1,0 +1,4 @@
+#!/bin/bash
+
+printf "Content-type: text/plain\n\n"
+env
